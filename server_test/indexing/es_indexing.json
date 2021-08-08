@@ -1,0 +1,194 @@
+{
+  "settings": {
+    "number_of_shards": 3,
+    "number_of_replicas": 1,
+
+     "analysis": {
+       "tokenizer": {
+         "my_nori_tokenizer": {
+           "type": "nori_tokenizer",
+           "decompound_mode": "discard",
+           "user_dictionary": "userdict_ko.txt"
+         }
+       },
+       "analyzer": {
+         "my_nori_analyzer": {
+           "tokenizer": "my_nori_tokenizer",
+           "filter": [
+             "my_nori_filter"
+           ],
+           "char_filter": [
+             "my_re_filter_1",
+             "my_re_filter_2",
+             "my_re_filter_3",
+             "my_re_filter_4",
+             "my_re_filter_5",
+             "my_re_filter_6",
+             "my_re_filter_7",
+             "my_re_filter_8",
+             "my_re_filter_9",
+             "my_re_filter_10",
+             "my_re_filter_11",
+             "my_re_filter_12",
+             "my_re_filter_13",
+             "my_re_filter_14",
+             "my_re_filter_15",
+             "my_mappings_char_filter"
+           ]
+         }
+       },
+       "filter": {
+         "my_nori_filter": {
+           "type": "nori_part_of_speech",
+           "stoptags": [
+             "E",
+             "IC",
+             "J",
+             "MAJ",
+             "NA",
+             "NNB",
+             "NNBC",
+             "NP",
+             "NR",
+             "SH",
+             "SL",
+             "SN",
+             "SY",
+             "UNKNOWN",
+             "VCN",
+             "VCP",
+             "VX",
+             "XPN",
+             "XR",
+             "XSA",
+             "XSN"
+           ]
+         }
+       },
+       "char_filter": {
+         "my_re_filter_1" : {
+           "type": "pattern_replace",
+           "pattern": "\\/\\s*\\/",
+           "replacement": "평행"
+         },
+         "my_re_filter_2" : {
+           "type" : "pattern_replace",
+           "pattern" : "\\^\\s*\\{\\s*C\\s*\\}",
+           "replacement" : "여집합"
+         },
+         "my_re_filter_3" : {
+           "type" : "pattern_replace",
+           "pattern" : "[a-z]′\\([t-z]+\\)|[a-z] \\^ \\{ ′ \\} \\( [t-z]+ \\)",
+           "replacement" : "도함수"
+         },
+         "my_re_filter_4" : {
+           "type" : "pattern_replace",
+           "pattern" : "[a-z]′\\([t-z]+\\)|[a-z] \\^ \\{ ′\\s*\\} \\( [t-z]+ \\)",
+           "replacement" : "미분계수"
+         },
+         "my_re_filter_5" : {
+           "type" : "pattern_replace",
+           "pattern" :  "[a-z0-9+]!",
+           "replacement" : "계승"
+         },
+         "my_re_filter_6" : {
+           "type" : "pattern_replace",
+           "pattern" : "<[가-힣]+>",
+           "replacement" : ""
+         },
+         "my_re_filter_7" : {
+           "type" : "pattern_replace",
+           "pattern" : "[a-z]′′\\([t-z]+\\)|[a-z] \\^ \\{ ′\\s*′ \\} \\( [t-z]+ \\)",
+           "replacement" : "이계도함수"
+         },
+         "my_re_filter_8" : {
+           "type" : "pattern_replace",
+           "pattern" : "[a-z]′′\\(\\d+\\)|[a-z] \\^ \\{ ′\\s*′ \\} \\( \\d+ \\)|[a-z]′′\\([a-s]+\\)|[a-z] \\^ \\{ ′\\s*′ \\} \\( [a-s]+ \\)",
+           "replacement" : "이차미분계수"
+         },
+         "my_re_filter_9" : {
+           "type" : "pattern_replace",
+           "pattern" : "[a-z]\\\\s{0,3}∘\\\\s{0,3}[a-z]",
+           "replacement" : "합성함수"
+         },
+         "my_re_filter_10" : {
+           "type" : "pattern_replace",
+           "pattern" : "□[a-zA-Z]{4}",
+           "replacement" : "사각형"
+         },
+         "my_re_filter_11" : {
+           "type" : "pattern_replace",
+           "pattern" : "△[a-zA-Z]{3}",
+           "replacement" : "삼각형"
+         },
+         "my_re_filter_12" : {
+           "type" : "pattern_replace",
+           "pattern" : "[a-z]{1}\\s*\\\\/\\s*[a-z]{1}[^a-z]",
+           "replacement" : "분수"
+         },
+         "my_re_filter_13" : {
+           "type" : "pattern_replace",
+           "pattern" : "\\\\^\\s*[k-z]",
+           "replacement" : "지수함수"
+         },
+         "my_re_filter_14" : {
+           "type" : "pattern_replace",
+           "pattern" : "\\ \\^\\s*\\ \\{\\s*[^가-힣]*[k-z]+[^가-힣\\ \\}\\ \\{]*\\s*\\ \\}",
+           "replacement" : "지수함수"
+         },
+         "my_re_filter_15" : {
+           "type" : "pattern_replace",
+           "pattern" : "\\[[0-9가-힣 ]+번\\]",
+           "replacement" : ""
+         },
+
+         "my_mappings_char_filter": {
+           "type": "mapping",
+           "mappings_path": "/etc/elasticsearch/nori_mapping.txt"
+         }
+        }
+       }
+     },
+
+    "mappings": {
+  "dynamic": "true",
+  "_source": {
+    "enabled": "true"
+  },
+  "properties": {
+    "problem_concept_id": {
+      "type": "integer"
+    },
+    "unitCode": {
+      "type": "integer"
+    },
+    "level": {
+      "type": "integer"
+    },
+    "type": {
+      "type": "integer"
+    },
+    "image_vec": {
+      "type": "dense_vector",
+      "dims": 1280
+    },
+    "p_text": {
+      "type": "text"
+    },
+    "s_text": {
+      "type": "text"
+    },
+    "cut": {
+      "type": "text"
+    },
+    "p_url": {
+      "type": "text"
+    },
+    "s_url": {
+      "type": "text"
+    }
+
+
+    }
+  }
+}
